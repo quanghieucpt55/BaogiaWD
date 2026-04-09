@@ -1,0 +1,953 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>📩 Nhận báo giá theo không gian tiệc cưới</title>
+  <meta
+    name="description"
+    content="Nhận báo giá 3 dịch vụ cưới gồm bướm dẫn dâu, FPV trao nhẫn và photobooth. Gửi ảnh không gian để nhận báo giá chính xác theo địa điểm tiệc."
+  />
+  <style>
+    :root {
+      --bg: #fff7fb;
+      --text: #2f2030;
+      --primary: #b5487c;
+      --primary-2: #8f2f60;
+      --card: #ffffff;
+      --muted: #6f5b6f;
+      --ring: rgba(181, 72, 124, 0.18);
+      --shadow: 0 10px 30px rgba(83, 25, 53, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 600px at 10% -20%, #ffd8eb 0%, transparent 60%),
+        radial-gradient(1000px 500px at 100% 0%, #ffeef7 0%, transparent 60%),
+        var(--bg);
+      line-height: 1.55;
+    }
+
+    .container {
+      width: min(1100px, 92%);
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 56px 0 30px;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #ffe7f3;
+      color: var(--primary-2);
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(28px, 4vw, 48px);
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+    }
+
+    .hero p {
+      margin: 0 0 22px;
+      color: var(--muted);
+      font-size: 17px;
+      max-width: 56ch;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 18px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 600;
+      border: 1px solid transparent;
+      transition: 0.2s ease;
+    }
+
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(140deg, var(--primary), var(--primary-2));
+      box-shadow: 0 8px 18px var(--ring);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      filter: brightness(0.98);
+    }
+
+    .btn-ghost {
+      color: var(--primary-2);
+      background: #fff;
+      border-color: #f3c8dc;
+    }
+
+    .stats {
+      display: grid;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .stat {
+      background: #fff;
+      border: 1px solid #f9d8e8;
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid #f6dcea;
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .form-wrap {
+      padding: 8px 14px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .form-card {
+      max-width: 820px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .form-card::before,
+    .form-card::after {
+      content: "";
+      position: absolute;
+      bottom: -34px;
+      width: 170px;
+      height: 130px;
+      border-radius: 999px;
+      pointer-events: none;
+      z-index: -1;
+      filter: blur(1px);
+    }
+
+    .form-card::before {
+      left: 48px;
+      background: radial-gradient(70% 70% at 50% 50%, rgba(226, 178, 204, 0.52), rgba(226, 178, 204, 0));
+    }
+
+    .form-card::after {
+      right: 48px;
+      background: radial-gradient(70% 70% at 50% 50%, rgba(214, 164, 193, 0.45), rgba(214, 164, 193, 0));
+    }
+
+    #form-bao-gia {
+      position: relative;
+      isolation: isolate;
+      padding-top: 36px;
+      padding-bottom: 28px;
+    }
+
+    #form-bao-gia::before,
+    #form-bao-gia::after {
+      content: "";
+      position: absolute;
+      top: 20px;
+      bottom: 20px;
+      width: 180px;
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0.5;
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+    }
+
+    #form-bao-gia::before {
+      left: 8px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 520' preserveAspectRatio='none'%3E%3Cpath d='M191 0C152 44 206 95 164 136C121 177 46 182 40 240C34 298 104 330 117 383C130 435 91 476 54 520L0 520L0 0Z' fill='%23e7bfd6'/%3E%3Cpath d='M219 0C176 54 231 106 186 148C142 189 71 193 63 250C56 307 125 340 138 391C151 442 112 481 76 520L35 520C72 476 110 434 97 383C84 330 14 299 21 240C28 181 105 178 147 136C188 95 135 43 172 0Z' fill='%23f2dbe8'/%3E%3C/svg%3E");
+    }
+
+    #form-bao-gia::after {
+      right: 8px;
+      transform: scaleX(-1);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 520' preserveAspectRatio='none'%3E%3Cpath d='M191 0C152 44 206 95 164 136C121 177 46 182 40 240C34 298 104 330 117 383C130 435 91 476 54 520L0 520L0 0Z' fill='%23dfb4cf'/%3E%3Cpath d='M219 0C176 54 231 106 186 148C142 189 71 193 63 250C56 307 125 340 138 391C151 442 112 481 76 520L35 520C72 476 110 434 97 383C84 330 14 299 21 240C28 181 105 178 147 136C188 95 135 43 172 0Z' fill='%23ecd0e1'/%3E%3C/svg%3E");
+    }
+
+    .quote-form {
+      width: min(100%, 760px);
+      padding: 24px;
+      display: grid;
+      gap: 16px;
+      background: #fff;
+      border-radius: 16px;
+      border: 0;
+    }
+
+    .form-header {
+      display: grid;
+      gap: 6px;
+      padding: 0;
+    }
+
+    .form-header h2 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.2;
+      color: #3f2a3f;
+    }
+
+    .form-header p {
+      margin: 0;
+      font-size: 14px;
+      color: #725970;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    .field label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #3c2d3d;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      padding: 12px 13px;
+      border: 1px solid #e3c7d7;
+      border-radius: 10px;
+      font-size: 14px;
+      color: var(--text);
+      background: #fffdff;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(181, 72, 124, 0.12);
+    }
+
+    .field textarea {
+      min-height: 106px;
+      resize: vertical;
+    }
+
+    .service-options {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .service-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid #efdce7;
+      border-radius: 10px;
+      padding: 10px 11px;
+      background: #fff;
+      font-size: 14px;
+      color: #4a3448;
+    }
+
+    .service-option input[type="checkbox"] {
+      accent-color: var(--primary);
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      flex-shrink: 0;
+    }
+
+    .form-note {
+      margin: 0;
+      padding: 11px 13px;
+      border-radius: 10px;
+      border: 1px solid #efd4e3;
+      background: linear-gradient(180deg, #fff8fc, #fffdfd);
+      color: #71526a;
+      font-size: 13px;
+    }
+
+    .file-input-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+
+    .upload-box {
+      border: 1px dashed #dfbad0;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #fff9fd, #fffefe);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 92px;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .upload-box.has-files {
+      justify-content: flex-start;
+      align-items: stretch;
+    }
+
+    .upload-box.is-active {
+      border-color: #c875a6;
+      box-shadow: 0 0 0 4px rgba(181, 72, 124, 0.1);
+    }
+
+    .upload-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      text-align: center;
+    }
+
+    .upload-help {
+      font-size: 13px;
+      color: #86697f;
+    }
+
+    .upload-clear {
+      border: 0;
+      background: transparent;
+      color: #9a6b86;
+      font-size: 12px;
+      text-decoration: underline;
+      cursor: pointer;
+      padding: 0;
+      display: none;
+    }
+
+    .upload-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-height: 24px;
+      justify-content: center;
+    }
+
+    .upload-list:empty {
+      display: none;
+    }
+
+    .upload-chip {
+      max-width: 100%;
+      border: 1px solid #edd4e2;
+      background: #fff;
+      color: #63495c;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .upload-chip-name {
+      max-width: 180px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .upload-chip-remove {
+      border: 0;
+      background: transparent;
+      color: #a06183;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0;
+      font-size: 14px;
+    }
+
+    .form-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      grid-column: 1 / -1;
+    }
+
+    .submit-btn {
+      border: 0;
+      border-radius: 11px;
+      padding: 12px 18px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      background: linear-gradient(140deg, var(--primary), var(--primary-2));
+      box-shadow: 0 8px 18px var(--ring);
+    }
+
+    .submit-btn[disabled] {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .submit-status {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .flatpickr-calendar {
+      border: 1px solid #efd4e2;
+      border-radius: 12px;
+      box-shadow: 0 16px 30px rgba(83, 25, 53, 0.14);
+      font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    .flatpickr-months .flatpickr-month {
+      color: #51334d;
+      fill: #51334d;
+    }
+
+    .flatpickr-current-month .flatpickr-monthDropdown-months {
+      font-weight: 700;
+      color: #51334d;
+    }
+
+    .flatpickr-weekday {
+      color: #7a5d74;
+      font-weight: 600;
+    }
+
+    .flatpickr-day.selected,
+    .flatpickr-day.startRange,
+    .flatpickr-day.endRange {
+      background: linear-gradient(140deg, var(--primary), var(--primary-2));
+      border-color: transparent;
+    }
+
+    .flatpickr-day:hover {
+      background: #ffe9f3;
+      border-color: #ffd4e7;
+    }
+
+    .flatpickr-day.today {
+      border-color: var(--primary);
+      color: var(--primary-2);
+    }
+
+    .flatpickr-day.today:hover {
+      color: #fff;
+      border-color: transparent;
+    }
+
+    .section {
+      padding: 18px 0 56px;
+    }
+
+    .feature-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .feature {
+      background: #fff;
+      border: 1px solid #f5d6e7;
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .feature h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+
+    .feature p {
+      margin: 0;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    footer {
+      text-align: center;
+      font-size: 13px;
+      color: #8b7488;
+      padding: 20px 0 36px;
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .service-options {
+        grid-template-columns: 1fr;
+      }
+      #form-bao-gia::before,
+      #form-bao-gia::after {
+        display: none;
+      }
+      .form-card::before,
+      .form-card::after {
+        display: none;
+      }
+      .feature-list {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <div>
+        <span class="badge">Báo giá theo không gian thực tế</span>
+        <h1>📩 Nhận báo giá theo không gian tiệc cưới</h1>
+        <p>
+          Bướm dẫn dâu, FPV trao nhẫn, photobooth.
+          Chỉ cần gửi ảnh không gian tiệc, chúng tôi sẽ lên phương án và báo giá trọn gói cho bạn.
+        </p>
+        <div class="actions">
+          <a class="btn btn-primary" href="#form-bao-gia">Gửi yêu cầu báo giá</a>
+          <a class="btn btn-ghost" id="call-consult-btn" href="tel:+84000000000">Gọi tư vấn ngay</a>
+        </div>
+        <div class="stats">
+          <div class="stat">Phản hồi trong 1-2 giờ làm việc</div>
+          <div class="stat">Báo giá dựa trên ảnh không gian thật</div>
+          <div class="stat">Phương án tối ưu theo từng dịch vụ</div>
+        </div>
+      </div>
+      <div class="card">
+        <img
+          src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80"
+          alt="Không gian dịch vụ cưới"
+          style="display:block;width:100%;height:100%;object-fit:cover;min-height:420px;"
+        />
+      </div>
+    </section>
+
+    <section class="section" id="form-bao-gia">
+      <div class="card form-wrap form-card">
+        <form id="quote-form" class="quote-form">
+          <div class="form-header">
+            <h2>Gửi thông tin để nhận báo giá nhanh</h2>
+            <p>Báo giá dựa trên ảnh thật của không gian tiệc để đảm bảo sát nhu cầu và ngân sách của bạn.</p>
+          </div>
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="customer-name">Tên của bạn *</label>
+              <input id="customer-name" name="name" type="text" required placeholder="Nhập tên của bạn" />
+            </div>
+
+            <div class="field">
+              <label for="customer-phone">Số điện thoại / Zalo *</label>
+              <input id="customer-phone" name="phone" type="tel" required placeholder="Nhập số điện thoại" />
+            </div>
+
+            <div class="field">
+              <label for="wedding-date">Ngày tổ chức tiệc *</label>
+              <input id="wedding-date" name="eventDate" type="text" required placeholder="Chọn ngày tổ chức" />
+            </div>
+
+            <div class="field">
+              <label for="venue">Địa điểm / nhà hàng</label>
+              <input id="venue" name="venue" type="text" placeholder="Tên địa điểm tổ chức" />
+            </div>
+
+            <div class="field full">
+              <label for="services">Bạn quan tâm dịch vụ nào? *</label>
+              <div class="service-options" id="services">
+                <label class="service-option">
+                  <input type="checkbox" name="service" value="Bướm dẫn dâu" />
+                  <span>Bướm dẫn dâu</span>
+                </label>
+                <label class="service-option">
+                  <input type="checkbox" name="service" value="FPV trao nhẫn" />
+                  <span>FPV trao nhẫn</span>
+                </label>
+                <label class="service-option">
+                  <input type="checkbox" name="service" value="Photobooth" />
+                  <span>Photobooth</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="field full">
+              <label for="space-images">Ảnh không gian tiệc * (có thể chọn nhiều ảnh)</label>
+              <input id="space-images" class="file-input-hidden" name="spaceImages" type="file" required accept="image/*" multiple />
+              <div class="upload-box" id="upload-box">
+                <div class="upload-top">
+                  <span class="upload-help" id="upload-help">Chưa có tệp nào được chọn (tối đa 10 ảnh, mỗi ảnh <= 10MB)</span>
+                  <button type="button" class="upload-clear" id="upload-clear">Xóa tất cả</button>
+                </div>
+                <div class="upload-list" id="upload-list"></div>
+              </div>
+            </div>
+
+            <div class="field full">
+              <label for="note">Yêu cầu thêm (nếu có)</label>
+              <textarea id="note" name="note" placeholder="Ví dụ: số bàn dự kiến, tông màu mong muốn, khung giờ tổ chức..."></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button id="submit-btn" class="submit-btn" type="submit">Gửi yêu cầu báo giá</button>
+              <span id="submit-status" class="submit-status"></span>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="feature-list">
+        <article class="feature">
+          <h3>1) Gửi thông tin và ảnh không gian</h3>
+          <p>Điền ngày tổ chức, địa điểm, chọn dịch vụ và tải ảnh khu vực tổ chức để báo giá chính xác.</p>
+        </article>
+        <article class="feature">
+          <h3>2) Nhận phương án theo từng dịch vụ</h3>
+          <p>Đội ngũ đề xuất phương án triển khai phù hợp cho bướm dẫn dâu, FPV trao nhẫn và photobooth.</p>
+        </article>
+        <article class="feature">
+          <h3>3) Chốt gói và lịch triển khai</h3>
+          <p>Xác nhận hạng mục, timeline và chi phí theo không gian thực tế của buổi tiệc.</p>
+        </article>
+      </div>
+    </section>
+  </div>
+
+  <footer>© 2026 Wedding Services Studio - Báo giá theo không gian thực tế.</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    (function () {
+      var callBtn = document.getElementById("call-consult-btn");
+      if (!callBtn) return;
+
+      callBtn.addEventListener("click", function (event) {
+        var isTouchDevice =
+          "ontouchstart" in window ||
+          navigator.maxTouchPoints > 0 ||
+          navigator.msMaxTouchPoints > 0;
+
+        if (isTouchDevice) return;
+
+        event.preventDefault();
+        var formSection = document.getElementById("form-bao-gia");
+        if (formSection) {
+          formSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        window.alert(
+          "Thiết bị hiện tại có thể không hỗ trợ gọi trực tiếp. Vui lòng để lại số ở form, chúng tôi sẽ gọi lại ngay."
+        );
+      });
+    })();
+
+    (function () {
+      if (typeof flatpickr !== "undefined") {
+        flatpickr("#wedding-date", {
+          dateFormat: "Y-m-d",
+          altInput: true,
+          altFormat: "d/m/Y",
+          allowInput: false
+        });
+      }
+    })();
+
+    (function () {
+      var APPS_SCRIPT_URL = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEBAPP_URL_HERE";
+      var CLOUDINARY_CLOUD_NAME = "PASTE_YOUR_CLOUD_NAME";
+      var CLOUDINARY_UPLOAD_PRESET = "PASTE_YOUR_UNSIGNED_UPLOAD_PRESET";
+      var form = document.getElementById("quote-form");
+      var submitBtn = document.getElementById("submit-btn");
+      var submitStatus = document.getElementById("submit-status");
+      var imageInput = document.getElementById("space-images");
+      var uploadHelp = document.getElementById("upload-help");
+      var uploadClear = document.getElementById("upload-clear");
+      var uploadList = document.getElementById("upload-list");
+      var uploadBox = document.getElementById("upload-box");
+      var MAX_FILE_COUNT = 10;
+      var MAX_FILE_SIZE_MB = 10;
+      var MAX_TOTAL_SIZE_MB = 40;
+      var selectedFiles = [];
+      if (!form) return;
+
+      function renderSelectedFiles(files) {
+        uploadList.innerHTML = "";
+        if (!files || files.length === 0) {
+          uploadHelp.textContent = "Chưa có tệp nào được chọn (tối đa 10 ảnh, mỗi ảnh <= 10MB)";
+          if (uploadClear) uploadClear.style.display = "none";
+          uploadBox.classList.remove("has-files");
+          return;
+        }
+        uploadHelp.textContent = "Đã chọn " + files.length + " ảnh";
+        if (uploadClear) uploadClear.style.display = "inline";
+        uploadBox.classList.add("has-files");
+        for (var i = 0; i < files.length; i++) {
+          var file = files[i];
+          var chip = document.createElement("span");
+          chip.className = "upload-chip";
+          chip.innerHTML =
+            '<span class="upload-chip-name"></span><button type="button" class="upload-chip-remove" aria-label="Xóa ảnh">×</button>';
+          chip.querySelector(".upload-chip-name").textContent = file.name;
+          chip.querySelector(".upload-chip-remove").setAttribute("data-index", String(i));
+          uploadList.appendChild(chip);
+        }
+      }
+
+      function syncInputFilesFromSelected() {
+        if (!imageInput) return;
+        var dt = new DataTransfer();
+        for (var i = 0; i < selectedFiles.length; i++) {
+          dt.items.add(selectedFiles[i]);
+        }
+        imageInput.files = dt.files;
+      }
+
+      function validateAndSetFiles(files) {
+        var list = Array.from(files || []);
+        if (list.length === 0) {
+          selectedFiles = [];
+          renderSelectedFiles(selectedFiles);
+          return true;
+        }
+
+        if (list.length > MAX_FILE_COUNT) {
+          submitStatus.textContent = "Bạn chỉ được chọn tối đa " + MAX_FILE_COUNT + " ảnh.";
+          return false;
+        }
+
+        var maxFileBytes = MAX_FILE_SIZE_MB * 1024 * 1024;
+        var maxTotalBytes = MAX_TOTAL_SIZE_MB * 1024 * 1024;
+        var total = 0;
+
+        for (var i = 0; i < list.length; i++) {
+          var file = list[i];
+          if (!file.type || file.type.indexOf("image/") !== 0) {
+            submitStatus.textContent = "Chỉ chấp nhận tệp hình ảnh.";
+            return false;
+          }
+          if (file.size > maxFileBytes) {
+            submitStatus.textContent = "Ảnh '" + file.name + "' vượt quá " + MAX_FILE_SIZE_MB + "MB.";
+            return false;
+          }
+          total += file.size;
+        }
+
+        if (total > maxTotalBytes) {
+          submitStatus.textContent = "Tổng dung lượng ảnh không được vượt quá " + MAX_TOTAL_SIZE_MB + "MB.";
+          return false;
+        }
+
+        submitStatus.textContent = "";
+        selectedFiles = list;
+        renderSelectedFiles(selectedFiles);
+        return true;
+      }
+
+      function mergeFiles(existingFiles, newFiles) {
+        var merged = [];
+        var seen = {};
+        var all = existingFiles.concat(Array.from(newFiles || []));
+        for (var i = 0; i < all.length; i++) {
+          var f = all[i];
+          var key = f.name + "|" + f.size + "|" + f.lastModified;
+          if (seen[key]) continue;
+          seen[key] = true;
+          merged.push(f);
+        }
+        return merged;
+      }
+
+      if (imageInput && uploadBox) {
+        imageInput.addEventListener("change", function () {
+          var merged = mergeFiles(selectedFiles, imageInput.files);
+          validateAndSetFiles(merged);
+        });
+
+        if (uploadClear) {
+          uploadClear.addEventListener("click", function (event) {
+            event.stopPropagation();
+            selectedFiles = [];
+            syncInputFilesFromSelected();
+            renderSelectedFiles([]);
+            submitStatus.textContent = "";
+          });
+        }
+
+        uploadList.addEventListener("click", function (event) {
+          var removeBtn = event.target.closest(".upload-chip-remove");
+          if (!removeBtn) return;
+          event.stopPropagation();
+          var index = Number(removeBtn.getAttribute("data-index"));
+          if (Number.isNaN(index)) return;
+          selectedFiles.splice(index, 1);
+          syncInputFilesFromSelected();
+          renderSelectedFiles(selectedFiles);
+          submitStatus.textContent = "";
+        });
+
+        uploadBox.addEventListener("click", function () {
+          imageInput.value = "";
+          imageInput.click();
+        });
+
+        uploadBox.addEventListener("dragover", function (event) {
+          event.preventDefault();
+          uploadBox.classList.add("is-active");
+        });
+
+        uploadBox.addEventListener("dragleave", function () {
+          uploadBox.classList.remove("is-active");
+        });
+
+        uploadBox.addEventListener("drop", function (event) {
+          event.preventDefault();
+          uploadBox.classList.remove("is-active");
+          validateAndSetFiles(event.dataTransfer.files);
+        });
+      }
+
+      async function uploadImagesToCloudinary(files) {
+        var uploadedUrls = [];
+        for (var i = 0; i < files.length; i++) {
+          var fd = new FormData();
+          fd.append("file", files[i]);
+          fd.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+          var uploadRes = await fetch(
+            "https://api.cloudinary.com/v1_1/" + CLOUDINARY_CLOUD_NAME + "/image/upload",
+            { method: "POST", body: fd }
+          );
+
+          if (!uploadRes.ok) {
+            throw new Error("Upload anh that bai");
+          }
+
+          var uploadData = await uploadRes.json();
+          uploadedUrls.push(uploadData.secure_url);
+        }
+        return uploadedUrls;
+      }
+
+      form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        if (APPS_SCRIPT_URL.indexOf("PASTE_YOUR") === 0) {
+          submitStatus.textContent = "Bạn chưa gắn URL Google Apps Script.";
+          return;
+        }
+
+        if (
+          CLOUDINARY_CLOUD_NAME.indexOf("PASTE_YOUR") === 0 ||
+          CLOUDINARY_UPLOAD_PRESET.indexOf("PASTE_YOUR") === 0
+        ) {
+          submitStatus.textContent = "Bạn chưa gắn Cloudinary cloud name/upload preset.";
+          return;
+        }
+
+        var selectedServices = Array.from(form.querySelectorAll('input[name="service"]:checked')).map(function (el) {
+          return el.value;
+        });
+        if (selectedServices.length === 0) {
+          submitStatus.textContent = "Vui lòng chọn ít nhất 1 dịch vụ.";
+          return;
+        }
+
+        if (selectedFiles.length === 0) {
+          submitStatus.textContent = "Vui lòng chọn ít nhất 1 ảnh không gian.";
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitStatus.textContent = "Đang upload ảnh...";
+
+        try {
+          var imageUrls = await uploadImagesToCloudinary(selectedFiles);
+          var payload = {
+            createdAt: new Date().toISOString(),
+            name: form.name.value.trim(),
+            phone: form.phone.value.trim(),
+            eventDate: form.eventDate.value,
+            venue: form.venue.value.trim(),
+            service: selectedServices.join(", "),
+            spaceLink: imageUrls.join(", "),
+            note: form.note.value.trim()
+          };
+
+          submitStatus.textContent = "Đang gửi thông tin...";
+          var response = await fetch(APPS_SCRIPT_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+
+          if (!response.ok) {
+            throw new Error("Khong gui duoc du lieu");
+          }
+
+          form.reset();
+          selectedFiles = [];
+          renderSelectedFiles([]);
+          submitStatus.textContent = "Đã gửi thành công. Chúng tôi sẽ liên hệ sớm.";
+        } catch (error) {
+          submitStatus.textContent = "Gửi thất bại. Vui lòng thử lại hoặc liên hệ Zalo.";
+        } finally {
+          submitBtn.disabled = false;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
