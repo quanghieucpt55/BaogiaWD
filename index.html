@@ -361,6 +361,15 @@
       color: #86697f;
     }
 
+    .upload-help-limit {
+      display: block;
+      width: 100%;
+      text-align: center;
+      font-size: 12px;
+      color: #9c7b92;
+      margin-top: 2px;
+    }
+
     .upload-clear {
       border: 0;
       background: transparent;
@@ -628,7 +637,8 @@
               <input id="space-images" class="file-input-hidden" name="spaceImages" type="file" required accept="image/*" multiple />
               <div class="upload-box" id="upload-box">
                 <div class="upload-top">
-                  <span class="upload-help" id="upload-help">Chưa có tệp nào được chọn (tối đa 10 ảnh, mỗi ảnh <= 10MB)</span>
+                  <span class="upload-help" id="upload-help">Chưa có tệp nào được chọn</span>
+                  <span class="upload-help-limit">(tối đa 10 ảnh, mỗi ảnh &lt;= 10MB)</span>
                   <button type="button" class="upload-clear" id="upload-clear">Xóa tất cả</button>
                 </div>
                 <div class="upload-list" id="upload-list"></div>
@@ -706,9 +716,9 @@
     })();
 
     (function () {
-      var APPS_SCRIPT_URL = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEBAPP_URL_HERE";
-      var CLOUDINARY_CLOUD_NAME = "PASTE_YOUR_CLOUD_NAME";
-      var CLOUDINARY_UPLOAD_PRESET = "PASTE_YOUR_UNSIGNED_UPLOAD_PRESET";
+      var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxNKO8aqYELBrPW3SQErshi0Phe39iNGNvsw7Bu5AIHrHnVaoPcZHSxJVPbspszJzCxAw/exec";
+      var CLOUDINARY_CLOUD_NAME = "dnyhxy3j3";
+      var CLOUDINARY_UPLOAD_PRESET = "wedding_unsigned_upload";
       var form = document.getElementById("quote-form");
       var submitBtn = document.getElementById("submit-btn");
       var submitStatus = document.getElementById("submit-status");
@@ -726,7 +736,7 @@
       function renderSelectedFiles(files) {
         uploadList.innerHTML = "";
         if (!files || files.length === 0) {
-          uploadHelp.textContent = "Chưa có tệp nào được chọn (tối đa 10 ảnh, mỗi ảnh <= 10MB)";
+          uploadHelp.textContent = "Chưa có tệp nào được chọn";
           if (uploadClear) uploadClear.style.display = "none";
           uploadBox.classList.remove("has-files");
           return;
