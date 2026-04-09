@@ -882,7 +882,8 @@
           );
 
           if (!uploadRes.ok) {
-            throw new Error("Upload anh that bai");
+            var uploadErrText = await uploadRes.text();
+            throw new Error("Lỗi upload ảnh: " + uploadErrText);
           }
 
           var uploadData = await uploadRes.json();
@@ -939,12 +940,17 @@
           submitStatus.textContent = "Đang gửi thông tin...";
           var response = await fetch(APPS_SCRIPT_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
           });
 
           if (!response.ok) {
-            throw new Error("Khong gui duoc du lieu");
+            var responseErrText = await response.text();
+            throw new Error("Lỗi ghi Google Sheet: " + responseErrText);
+          }
+
+          var responseData = await response.json();
+          if (!responseData.ok) {
+            throw new Error("Apps Script báo lỗi: " + (responseData.error || "không rõ nguyên nhân"));
           }
 
           form.reset();
@@ -952,7 +958,7 @@
           renderSelectedFiles([]);
           submitStatus.textContent = "Đã gửi thành công. Chúng tôi sẽ liên hệ sớm.";
         } catch (error) {
-          submitStatus.textContent = "Gửi thất bại. Vui lòng thử lại hoặc liên hệ Zalo.";
+          submitStatus.textContent = "Gửi thất bại: " + (error && error.message ? error.message : "Vui lòng thử lại.");
         } finally {
           submitBtn.disabled = false;
         }
