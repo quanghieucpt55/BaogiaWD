@@ -925,7 +925,16 @@
         submitStatus.textContent = "Đang upload tệp...";
 
         try {
-          var imageUrls = await uploadFilesToCloudinary(selectedFiles);
+          var fileUrls = await uploadFilesToCloudinary(selectedFiles);
+          var hasVideo = selectedFiles.some(function (file) {
+            return file.type && file.type.indexOf("video/") === 0;
+          });
+          var fileTypes = selectedFiles.map(function (file) {
+            if (!file.type) return "unknown";
+            if (file.type.indexOf("video/") === 0) return "video";
+            if (file.type.indexOf("image/") === 0) return "image";
+            return "unknown";
+          });
           var payload = {
             createdAt: new Date().toISOString(),
             name: form.name.value.trim(),
@@ -933,7 +942,11 @@
             eventDate: form.eventDate.value,
             venue: form.venue.value.trim(),
             service: selectedServices.join(", "),
-            spaceLink: imageUrls.join(", "),
+            spaceLink: fileUrls.join(", "),
+            // Keep old key for backward compatibility, add richer media metadata for sheet labeling.
+            spaceMediaLinks: fileUrls.join(", "),
+            spaceMediaTypes: fileTypes.join(", "),
+            hasVideo: hasVideo,
             note: form.note.value.trim()
           };
 
