@@ -633,12 +633,12 @@
             </div>
 
             <div class="field full">
-              <label for="space-images">Ảnh không gian tiệc * (có thể chọn nhiều ảnh)</label>
-              <input id="space-images" class="file-input-hidden" name="spaceImages" type="file" required accept="image/*" multiple />
+              <label for="space-images">Ảnh/video không gian tiệc * (có thể chọn nhiều tệp)</label>
+              <input id="space-images" class="file-input-hidden" name="spaceImages" type="file" required accept="image/*,video/*" multiple />
               <div class="upload-box" id="upload-box">
                 <div class="upload-top">
                   <span class="upload-help" id="upload-help">Chưa có tệp nào được chọn</span>
-                  <span class="upload-help-limit">(tối đa 10 ảnh, mỗi ảnh &lt;= 10MB)</span>
+                  <span class="upload-help-limit">(tối đa 10 tệp, mỗi tệp &lt;= 10MB)</span>
                   <button type="button" class="upload-clear" id="upload-clear">Xóa tất cả</button>
                 </div>
                 <div class="upload-list" id="upload-list"></div>
@@ -741,7 +741,7 @@
           uploadBox.classList.remove("has-files");
           return;
         }
-        uploadHelp.textContent = "Đã chọn " + files.length + " ảnh";
+        uploadHelp.textContent = "Đã chọn " + files.length + " tệp";
         if (uploadClear) uploadClear.style.display = "inline";
         uploadBox.classList.add("has-files");
         for (var i = 0; i < files.length; i++) {
@@ -749,7 +749,7 @@
           var chip = document.createElement("span");
           chip.className = "upload-chip";
           chip.innerHTML =
-            '<span class="upload-chip-name"></span><button type="button" class="upload-chip-remove" aria-label="Xóa ảnh">×</button>';
+            '<span class="upload-chip-name"></span><button type="button" class="upload-chip-remove" aria-label="Xóa tệp">×</button>';
           chip.querySelector(".upload-chip-name").textContent = file.name;
           chip.querySelector(".upload-chip-remove").setAttribute("data-index", String(i));
           uploadList.appendChild(chip);
@@ -774,7 +774,7 @@
         }
 
         if (list.length > MAX_FILE_COUNT) {
-          submitStatus.textContent = "Bạn chỉ được chọn tối đa " + MAX_FILE_COUNT + " ảnh.";
+          submitStatus.textContent = "Bạn chỉ được chọn tối đa " + MAX_FILE_COUNT + " tệp.";
           return false;
         }
 
@@ -784,19 +784,19 @@
 
         for (var i = 0; i < list.length; i++) {
           var file = list[i];
-          if (!file.type || file.type.indexOf("image/") !== 0) {
-            submitStatus.textContent = "Chỉ chấp nhận tệp hình ảnh.";
+          if (!file.type || (file.type.indexOf("image/") !== 0 && file.type.indexOf("video/") !== 0)) {
+            submitStatus.textContent = "Chỉ chấp nhận tệp ảnh hoặc video.";
             return false;
           }
           if (file.size > maxFileBytes) {
-            submitStatus.textContent = "Ảnh '" + file.name + "' vượt quá " + MAX_FILE_SIZE_MB + "MB.";
+            submitStatus.textContent = "Tệp '" + file.name + "' vượt quá " + MAX_FILE_SIZE_MB + "MB.";
             return false;
           }
           total += file.size;
         }
 
         if (total > maxTotalBytes) {
-          submitStatus.textContent = "Tổng dung lượng ảnh không được vượt quá " + MAX_TOTAL_SIZE_MB + "MB.";
+          submitStatus.textContent = "Tổng dung lượng tệp không được vượt quá " + MAX_TOTAL_SIZE_MB + "MB.";
           return false;
         }
 
@@ -869,7 +869,7 @@
         });
       }
 
-      async function uploadImagesToCloudinary(files) {
+      async function uploadFilesToCloudinary(files) {
         var uploadedUrls = [];
         for (var i = 0; i < files.length; i++) {
           var fd = new FormData();
@@ -877,13 +877,13 @@
           fd.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
 
           var uploadRes = await fetch(
-            "https://api.cloudinary.com/v1_1/" + CLOUDINARY_CLOUD_NAME + "/image/upload",
+            "https://api.cloudinary.com/v1_1/" + CLOUDINARY_CLOUD_NAME + "/auto/upload",
             { method: "POST", body: fd }
           );
 
           if (!uploadRes.ok) {
             var uploadErrText = await uploadRes.text();
-            throw new Error("Lỗi upload ảnh: " + uploadErrText);
+            throw new Error("Lỗi upload tệp: " + uploadErrText);
           }
 
           var uploadData = await uploadRes.json();
@@ -917,15 +917,15 @@
         }
 
         if (selectedFiles.length === 0) {
-          submitStatus.textContent = "Vui lòng chọn ít nhất 1 ảnh không gian.";
+          submitStatus.textContent = "Vui lòng chọn ít nhất 1 ảnh/video không gian.";
           return;
         }
 
         submitBtn.disabled = true;
-        submitStatus.textContent = "Đang upload ảnh...";
+        submitStatus.textContent = "Đang upload tệp...";
 
         try {
-          var imageUrls = await uploadImagesToCloudinary(selectedFiles);
+          var imageUrls = await uploadFilesToCloudinary(selectedFiles);
           var payload = {
             createdAt: new Date().toISOString(),
             name: form.name.value.trim(),
